@@ -22,9 +22,7 @@ const createItem = (req, res) => {
           .status(INVALID)
           .send({ message: "Validation Error occured" });
       }
-      return res
-        .status(SERVER_ERROR)
-        .send({ message: "Error from the createItem", e });
+      return res .status(SERVER_ERROR).send({ message: "Error from the createItem"});
     });
 };
 
@@ -38,6 +36,8 @@ const getItems = (req, res) => {
     });
 };
 
+/*
+
 const updateItem = (req, res) => {
   const { itemId } = req.params;
   const { imageURL } = req.body;
@@ -49,6 +49,7 @@ const updateItem = (req, res) => {
       res.status(SERVER_ERROR).send({ message: " error from getItems", e });
     });
 };
+*/
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
@@ -61,10 +62,13 @@ const deleteItem = (req, res) => {
       console.log(err);
 
       if (err.name === "DocumentNotFoundError")
-        res.status(NOT_FOUND).send({ message: "card not found" });
+        return res.status(NOT_FOUND).send({ message: "card not found" });
       if (err.name === "CastError")
-        res.status(INVALID).send({ message: "invalid request" });
+       return res.status(INVALID).send({ message: "invalid request" });
+
+      return res.status(SERVER_ERROR).send({message:"There has been an error with the server"});
     });
+
 };
 
 // todo put and delete likes
@@ -83,10 +87,14 @@ const addLike = (req, res) => {
     })
     .catch((err) => {
       // console.log(err.name);
-      if (err.name === "DocumentNotFoundError")
-        res.status(NOT_FOUND).send({ message: "card not found" });
-      if (err.name === "CastError")
-        res.status(INVALID).send({ message: "invalid request " });
+      if (err.name === "DocumentNotFoundError"){
+       return res.status(NOT_FOUND).send({ message: "card not found" });
+      }
+      if (err.name === "CastError"){
+       return res.status(INVALID).send({ message: "invalid request " });
+      }
+
+       return res.status(SERVER_ERROR).send({ message: "There has been an error with the server" });
     });
 };
 
@@ -106,16 +114,18 @@ const removeLike = (req, res) => {
     .catch((err) => {
       console.log(err.name);
       if (err.name === "DocumentNotFoundError")
-        res.status(NOT_FOUND).send({ message: "card not found" });
+       return res.status(NOT_FOUND).send({ message: "card not found" });
       if (err.name === "CastError")
-        res.status(INVALID).send({ message: "invalid request" });
+       return res.status(INVALID).send({ message: "invalid request" });
+
+    return res.status(SERVER_ERROR).send({ message: "There has been an error with the server" });
     });
 };
 
 module.exports = {
   createItem,
   getItems,
-  updateItem,
+  // updateItem,
   deleteItem,
   addLike,
   removeLike,

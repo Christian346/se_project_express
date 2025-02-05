@@ -1,7 +1,7 @@
 const express = require("express"); // import express application
 const mongoose =  require("mongoose"); // this is the database part to connect it to the database
 const mainRouter = require("./routes/index");
-
+// const routes = require("./routes");
 
 const app = express(); // the app to call the express function
 const {PORT = 3001} = process.env;
@@ -21,10 +21,9 @@ app.use((req, res, next) => {
 });
 
 
-const routes = require('./routes')
 
 app.use(express.json());
-app.use(routes);
+// app.use(routes);
 
 
 // if request are sent to slash meaning port 3001 then send em to the user router
