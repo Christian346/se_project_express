@@ -10,10 +10,13 @@ const { performLogin } = require("./controllers/users");
 const app = express(); // the app to call the express function
 const { PORT = 3001 } = process.env;
 
+app.use(cors());
+
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db") // basic connection string that allows connection with database
   .then(() => {
     console.log("Connected to DB");
+
   })
   .catch((e) => console.error(e));
 
@@ -35,7 +38,7 @@ app.post("/signin", performLogin);
 app.use("/", mainRouter);
 // app.post("/signup", createUser);
 
-app.use(cors());
+
 
 // set up the port and the express server
 app.listen(PORT, () => {
