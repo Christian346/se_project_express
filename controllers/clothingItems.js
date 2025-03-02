@@ -7,6 +7,8 @@ const createItem = (req, res) => {
   console.log(req.body);
   const userId = req.user._id;
 
+
+
   const { name, weather, imageUrl } = req.body;
   // name:name,weather:weather,imageURL:imageURL
   ClothingItem.create({ name, weather, imageUrl, owner: userId }) // saves it as the owner
@@ -53,11 +55,18 @@ const updateItem = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
+  // const { _id: userId} = req.user; //
   // console.log(itemId);
 
   ClothingItem.findByIdAndDelete(itemId)
     .orFail()
-    .then(() => res.status(200).send({ message: "item was deleted" }))
+    .then((item) => {
+      if (!item.owner.equals(req.user._id)) {
+        return res.status(403).send({message:"You cant delete someone else card"})
+      }
+      return ClothingItem.deleteOne(item).then(() => res.status(200).send(item, {message: "Item was deleted"}));
+
+    })
     .catch((err) => {
       console.log(err);
 
