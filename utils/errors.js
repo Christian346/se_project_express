@@ -3,6 +3,7 @@ const  NOT_FOUND = 404;
 const  SERVER_ERROR = 500;
 const CONFLICT_ERROR = 409;
 const INCORRECT_PASSWORD = 401;
+const FORBIDDEN = 403;
 
 class UserNotFound extends Error {
     constructor(message) {
@@ -15,4 +16,4 @@ class UserNotFound extends Error {
 
 
 
-module.exports = {INVALID , NOT_FOUND , SERVER_ERROR , CONFLICT_ERROR, UserNotFound, INCORRECT_PASSWORD}
+module.exports = {INVALID , NOT_FOUND , SERVER_ERROR , CONFLICT_ERROR, UserNotFound, INCORRECT_PASSWORD, FORBIDDEN}

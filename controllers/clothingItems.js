@@ -1,5 +1,5 @@
 const ClothingItem = require("../models/clothingItem");
-const { INVALID, NOT_FOUND, SERVER_ERROR } = require("../utils/errors");
+const { INVALID, NOT_FOUND, SERVER_ERROR,FORBIDDEN } = require("../utils/errors");
 
 // main handler of api calls
 const createItem = (req, res) => {
@@ -34,7 +34,7 @@ const getItems = (req, res) => {
     .then((items) => res.status(200).send(items))
     .catch((e) => {
       console.log(e);
-      res.status(SERVER_ERROR).send({ message: " error from getItems", e });
+      res.status(SERVER_ERROR).send({ message: " error from getItems"});
     });
 };
 
@@ -58,13 +58,13 @@ const deleteItem = (req, res) => {
   // const { _id: userId} = req.user; //
   // console.log(itemId);
 
-  ClothingItem.findByIdAndDelete(itemId)
+  ClothingItem.findById(itemId)
     .orFail()
     .then((item) => {
       if (!item.owner.equals(req.user._id)) {
-        return res.status(403).send({message:"You cant delete someone else card"})
+        return res.status(FORBIDDEN).send({message:"You cant delete someone else card"})
       }
-      return ClothingItem.deleteOne(item).then(() => res.status(200).send(item, {message: "Item was deleted"}));
+      return ClothingItem.deleteOne(item).then(() => res.status(200).send({message: "Item was deleted"}));
 
     })
     .catch((err) => {

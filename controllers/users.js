@@ -8,12 +8,13 @@ const {
   NOT_FOUND,
   SERVER_ERROR,
   CONFLICT_ERROR,
+  INCORRECT_PASSWORD,
   //  UserNotFound,
   // INCORRECT_PASSWORD,
 } = require("../utils/errors");
 
 // GET /users
-
+/*
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => {
@@ -26,7 +27,7 @@ const getUsers = (req, res) => {
         .send({ message: "Error with the server" });
     });
 };
-
+*/
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body; // whatever the user enters
   // console.log(name, avatar);
@@ -123,7 +124,15 @@ const performLogin = (req, res) => {
       .catch((err) => {
         console.error(err);
         // send unauthorized response
-        return res.status(401).send({ message: "Unathorized request" });
+        if (err.message === "Incorrect email or password"){
+         return res
+           .status(INCORRECT_PASSWORD)
+           .send({ message: "Unathorized request" });
+        }
+        return res
+        .status(SERVER_ERROR)
+        .send({ message: "There has been an error with the server" });
+
       })
   );
 };
@@ -162,13 +171,13 @@ const updateUser = (req, res) => {
                  return;
                }
 
-            res.status(500).send({ message: "error in the server" });
+            res.status(SERVER_ERROR).send({ message: "error in the server" });
           })
       );
 };
 
 module.exports = {
-  getUsers,
+ // getUsers,
   createUser,
   getCurrentUser,
   performLogin,
