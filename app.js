@@ -33,7 +33,7 @@ app.use(express.json());
 // app.use(routes);
 
 // if request are sent to slash meaning port 3001 then send em to the user router
-app.post("/signin", performLogin);
+app.post("/signin", performLogin); // endpoint for allowing a singin post  
 
 app.use("/", mainRouter);
 // app.post("/signup", createUser);

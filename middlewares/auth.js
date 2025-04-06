@@ -7,7 +7,7 @@ function middlewareAuth(req, res, next) {
 
   if (!authorization || !authorization.startsWith("Bearer ")) {
     // means theres no token
-    res.status(INCORRECT_PASSWORD).send({ message: "authorization required" });
+    return res.status(INCORRECT_PASSWORD).send({ message: "authorization required" });
   }
 
   const token = authorization.replace("Bearer ", "");
@@ -17,11 +17,11 @@ function middlewareAuth(req, res, next) {
     payload = jwt.verify(token, JWT_SECRET);
 
   } catch {
-    res.status(INCORRECT_PASSWORD).send({ message: "unathorized request" });
+    return res.status(INCORRECT_PASSWORD).send({ message: "unathorized request" });
   }
 
   req.user = payload; // adding a user property to request
-  next(); // passing updated request to next function in line
+  return next(); // passing updated request to next function in line
 }
-
+// return value isnt really used in middleware express just ignores it.
 module.exports = { middlewareAuth };

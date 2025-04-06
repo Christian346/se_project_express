@@ -17,7 +17,7 @@ const createItem = (req, res) => {
       res.send({ data: item });
     })
     .catch((e) => {
-      console.error(e.name);
+      console.error(e);
       // catch validation error with an if block
       if (e.name === "ValidationError") {
         return res
@@ -90,9 +90,10 @@ const addLike = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then(() => {
+    .then((updatedItem) => {
       // when it is succesful
-      res.status(200).send({ message: "like was succesfully added" });
+      res.status(200).send({updatedItem, message: "like was succesfully added" });
+
     })
     .catch((err) => {
       // console.log(err.name);
@@ -116,9 +117,11 @@ const removeLike = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then(() => {
+    .then((updatedItem) => {
       // when it is succesful
-      res.status(200).send({ message: "like was succesfully removed" });
+      res
+        .status(200)
+        .send({ updatedItem, message: "like was succesfully removed" });
     })
     .catch((err) => {
       console.log(err.name);
