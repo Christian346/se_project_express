@@ -1,6 +1,7 @@
 const router = require("express").Router();
  const { /* getUsers ,  createUser */ getCurrentUser, updateUser} = require("../controllers/users");
  const { middlewareAuth } = require("../middlewares/auth");
+ const {validateClothingItem , validateId} = require("../middlewares/validation")
 
 
 // ALL HTTP METHODS

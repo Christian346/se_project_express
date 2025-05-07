@@ -20,10 +20,9 @@ module.exports = {
     sourceType: "module",
   },
   rules: {
-    "no-console": ["warn", { allow: ["error"], }],
-    "no-underscore-dangle":["error", { "allow": ["_id"] }]
-
+    "no-console": ["warn", { allow: ["error"] }],
+    "no-underscore-dangle": ["error", { allow: ["_id"] }],
+    "no-unused-vars": "off",
   },
-
 };
 // check how to fix for _id rule

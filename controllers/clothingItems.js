@@ -1,14 +1,19 @@
 const ClothingItem = require("../models/clothingItem");
 const { INVALID, NOT_FOUND, SERVER_ERROR,FORBIDDEN } = require("../utils/errors");
+const BadRequestError = require("../Errors/BadRequestError");
+const ForbiddenError = require("../Errors/ForbiddenError");
+const NotFound = require("../Errors/NotFoundError");
+
+
 
 // main handler of api calls
-const createItem = (req, res) => {
+// we will be using next parameter in order to move the next middleware
+const createItem = (req, res , next) => {
+
   console.log(req);
   console.log(req.body);
+
   const userId = req.user._id;
-
-
-
   const { name, weather, imageUrl } = req.body;
   // name:name,weather:weather,imageURL:imageURL
   ClothingItem.create({ name, weather, imageUrl, owner: userId }) // saves it as the owner
@@ -20,21 +25,24 @@ const createItem = (req, res) => {
       console.error(e);
       // catch validation error with an if block
       if (e.name === "ValidationError") {
-        return res
-          .status(INVALID)
-          .send({ message: "Validation Error occured" });
-      }
-      return res .status(SERVER_ERROR).send({ message: "Error from the createItem"});
+        next(new BadRequestError("Validation Error occured" ))
+      //   return res
+      //     .status(INVALID)
+      //     .send({ message: "Validation Error occured" });
+       }
+
+
+  // return res .status(SERVER_ERROR).send({ message: "Error from the createItem"});
+  next(e)
     });
 };
 
-const getItems = (req, res) => {
+const getItems = (req, res , next) => {
   ClothingItem.find({})
 
     .then((items) => res.status(200).send(items))
     .catch((e) => {
-      console.log(e);
-      res.status(SERVER_ERROR).send({ message: " error from getItems"});
+      next(e) // for the 500's let next handle using hte errorhandler middleware
     });
 };
 
@@ -53,7 +61,7 @@ const updateItem = (req, res) => {
 };
 */
 
-const deleteItem = (req, res) => {
+const deleteItem = (req, res , next) => {
   const { itemId } = req.params;
   // const { _id: userId} = req.user; //
   // console.log(itemId);
@@ -62,7 +70,8 @@ const deleteItem = (req, res) => {
     .orFail()
     .then((item) => {
       if (!item.owner.equals(req.user._id)) {
-        return res.status(FORBIDDEN).send({message:"You cant delete someone else card"})
+         next(new ForbiddenError("You can't delete someone else's card"));
+       // return res.status(FORBIDDEN).send({message:"You cant delete someone else card"})
       }
       return ClothingItem.deleteOne(item).then(() => res.status(200).send({message: "Item was deleted"}));
 
@@ -71,17 +80,20 @@ const deleteItem = (req, res) => {
       console.log(err);
 
       if (err.name === "DocumentNotFoundError")
-        return res.status(NOT_FOUND).send({ message: "card not found" });
+        next(new NotFound("card not found"));
+      //  return res.status(NOT_FOUND).send({ message: "card not found" });
       if (err.name === "CastError")
-       return res.status(INVALID).send({ message: "invalid request" });
+        next(new BadRequestError("invalid request"));
+      // return res.status(INVALID).send({ message: "invalid request" });
 
-      return res.status(SERVER_ERROR).send({message:"There has been an error with the server"});
+      // return res.status(SERVER_ERROR).send({message:"There has been an error with the server"});
+      next(err);
     });
 
 };
 
 // todo put and delete likes
-const addLike = (req, res) => {
+const addLike = (req, res, next) => {
   const { itemId } = req.params;
 
   ClothingItem.findByIdAndUpdate(
@@ -98,17 +110,19 @@ const addLike = (req, res) => {
     .catch((err) => {
       // console.log(err.name);
       if (err.name === "DocumentNotFoundError"){
-       return res.status(NOT_FOUND).send({ message: "card not found" });
+        next(new NotFound("card not found"));
+       // return res.status(NOT_FOUND).send({ message: "card not found" });
       }
       if (err.name === "CastError"){
-       return res.status(INVALID).send({ message: "invalid request " });
+        next(new BadRequestError("invalid request"))
+       // return res.status(INVALID).send({ message: "invalid request " });
       }
-
-       return res.status(SERVER_ERROR).send({ message: "There has been an error with the server" });
+       next(err);
+       // return res.status(SERVER_ERROR).send({ message: "There has been an error with the server" });
     });
 };
 
-const removeLike = (req, res) => {
+const removeLike = (req, res, next) => {
   const { itemId } = req.params;
 
   ClothingItem.findByIdAndUpdate(
@@ -126,11 +140,13 @@ const removeLike = (req, res) => {
     .catch((err) => {
       console.log(err.name);
       if (err.name === "DocumentNotFoundError")
-       return res.status(NOT_FOUND).send({ message: "card not found" });
+        next(new NotFound("card not found"))
+      // return res.status(NOT_FOUND).send({ message: "card not found" });
       if (err.name === "CastError")
-       return res.status(INVALID).send({ message: "invalid request" });
-
-    return res.status(SERVER_ERROR).send({ message: "There has been an error with the server" });
+        next(new BadRequestError("invalid request"));
+      // return res.status(INVALID).send({ message: "invalid request" });
+  next(err);
+   // return res.status(SERVER_ERROR).send({ message: "There has been an error with the server" });
     });
 };
 
