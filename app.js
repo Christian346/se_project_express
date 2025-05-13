@@ -7,12 +7,13 @@ const { performLogin } = require("./controllers/users");
 const errorHandler = require("./middlewares/errorhandler");
 const { validateUserLoggin } = require("./middlewares/validation");
 const { requestLogger, errorLogger } = require("./middlewares/loggers");
+require("dotenv").config(); // allows to read enviromental variables into app
 
 
 // const routes = require("./routes");
 
 const app = express(); // the app to call the express function
-const { PORT = 3001 } = process.env;
+const { PORT = 3001 } = process.env; // makes port into enviromental var
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db") // basic connection string that allows connection with database
