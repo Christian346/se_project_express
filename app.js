@@ -31,6 +31,14 @@ app.use((req, res, next) => {
     });
     // it needed to have a owner and id but the middleware wasnt there yet to test for authentication
     */
+
+    app.get("/crash-test", () => {
+      setTimeout(() => {
+        throw new Error("Server will crash now");
+      }, 0);
+    });
+
+
 app.use(cors());// nothing will be allowed to communicate from the browser to your backend in order to make requests
 app.use(express.json());
 // app.use(routes);
