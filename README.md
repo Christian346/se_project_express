@@ -10,3 +10,9 @@ Before committing your code, make sure you edit the file `sprint.txt` in the roo
 
 #### Description
 this project is a server side Javascript API that utilizes Node.js and Express to write server side code. It utilizes the technique MVC in order to manage and structure data that will be sent to a non-relational database. It also includes the handling of different http request with their respective status and errors if they were to occur. 
+
+### the domain names for the deployed vm site are:
+api.chris-wtwr.minecraftnoob.com
+chris-wtwr.minecraftnoob.com
+www.chris-wtwr.minecraftnoob.com
+
