@@ -69,11 +69,16 @@ const deleteItem = (req, res , next) => {
   ClothingItem.findById(itemId)
     .orFail()
     .then((item) => {
+
       if (!item.owner.equals(req.user._id)) {
-         next(new ForbiddenError("You can't delete someone else's card"));
+
+        return  next(new ForbiddenError("You can't delete someone else's card"));
        // return res.status(FORBIDDEN).send({message:"You cant delete someone else card"})
       }
-      return ClothingItem.deleteOne(item).then(() => res.status(200).send({message: "Item was deleted"}));
+
+      return ClothingItem.deleteOne(item).then(() =>
+        res.status(200).send({ message: "Item was deleted" })
+      );
 
     })
     .catch((err) => {

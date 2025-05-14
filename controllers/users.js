@@ -4,7 +4,7 @@ const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
 
 const BadRequestError = require("../Errors/BadRequestError");
-const ConflictError = require("../Errors/BadRequestError");
+const ConflictError = require("../Errors/ConflictError");
 const NotFoundError = require("../Errors/NotFoundError");
 const IncorrectPassword = require("../Errors/IncorrectPasswordError");
 

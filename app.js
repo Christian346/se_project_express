@@ -1,3 +1,4 @@
+require("dotenv").config(); // allows to read enviromental variables into app and has to be at the top of the file
 const express = require("express"); // import express application
 const mongoose = require("mongoose"); // this is the database part to connect it to the database
 const cors = require("cors");
@@ -7,8 +8,6 @@ const { performLogin } = require("./controllers/users");
 const errorHandler = require("./middlewares/errorhandler");
 const { validateUserLoggin } = require("./middlewares/validation");
 const { requestLogger, errorLogger } = require("./middlewares/loggers");
-require("dotenv").config(); // allows to read enviromental variables into app
-
 
 // const routes = require("./routes");
 
@@ -32,14 +31,13 @@ app.use((req, res, next) => {
     // it needed to have a owner and id but the middleware wasnt there yet to test for authentication
     */
 
-    app.get("/crash-test", () => {
-      setTimeout(() => {
-        throw new Error("Server will crash now");
-      }, 0);
-    });
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Server will crash now");
+  }, 0);
+});
 
-
-app.use(cors());// nothing will be allowed to communicate from the browser to your backend in order to make requests
+app.use(cors()); // nothing will be allowed to communicate from the browser to your backend in order to make requests
 app.use(express.json());
 // app.use(routes);
 app.use(requestLogger);

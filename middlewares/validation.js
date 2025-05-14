@@ -30,7 +30,7 @@ const validateURL = (value, helpers) => {
 
 const validateClothingItem = celebrate({
   body: Joi.object().keys({
-    weather: Joi.string().valid("warm","hot","cold").required(),
+    weather: Joi.string().valid("warm", "hot", "cold").required(),
     name: Joi.string().required().min(2).max(30),
     imageUrl: Joi.string().required().custom(validateURL).messages({
       "string.empty": 'The "imageUrl" field must be filled in',
@@ -62,8 +62,23 @@ const validateUserLoggin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
-  })
-})
+  }),
+});
 
-module.exports = {validateClothingItem, validateId , validateUserLoggin, validateUserCreation};
+const validateUpdatingUser = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    avatar: Joi.string().required().custom(validateURL).messages({
+      "string.empty": 'The "imageUrl" field must be filled in',
+      "string.uri": 'the "imageUrl" field must be a valid url',
+    }),
+  }),
+});
 
+module.exports = {
+  validateClothingItem,
+  validateId,
+  validateUserLoggin,
+  validateUserCreation,
+  validateUpdatingUser
+};
